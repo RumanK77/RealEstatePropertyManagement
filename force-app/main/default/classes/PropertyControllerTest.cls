@@ -18,7 +18,9 @@ private class PropertyControllerTest {
           : i <= 20 ? 'Semi-Furnished' : 'Unfurnished',
         Status__c = i <= 20 ? 'Available' : 'Occupied',
         Rent__c = 1000 * i,
-        Description__c = 'Test Property Description ' + i
+        Description__c = 'Test Property Description ' + i,
+        Location__Latitude__s = i <= 10 ? 19.0760 : 19.2000,
+        Location__Longitude__s = i <= 10 ? 72.8777 : 73.0000
       );
 
       properties.add(propertyRecord);
@@ -180,5 +182,106 @@ private class PropertyControllerTest {
 
     System.assertEquals(1, result.pageNumber);
     System.assertEquals(25, result.pageSize);
+  }
+
+  @IsTest
+  static void testInvalidPageNumberDefaultsToFirstPage() {
+    Test.startTest();
+
+    PropertyController.PropertyPageResult result = PropertyController.getProperties(
+      0,
+      1,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    );
+
+    Test.stopTest();
+
+    System.assertEquals(1, result.pageNumber);
+    System.assertEquals(25, result.properties.size());
+  }
+
+  @IsTest
+  static void testDistanceFilter() {
+    Test.startTest();
+
+    PropertyController.PropertyPageResult result = PropertyController.getProperties(
+      1,
+      25,
+      null,
+      null,
+      null,
+      null,
+      19.0760,
+      72.8777,
+      5
+    );
+
+    Test.stopTest();
+
+    System.assertEquals(10, result.totalRecords);
+    System.assertEquals(10, result.properties.size());
+    for (Property__c propertyRecord : result.properties) {
+      System.assertEquals(19.0760, propertyRecord.Location__Latitude__s);
+      System.assertEquals(72.8777, propertyRecord.Location__Longitude__s);
+    }
+  }
+
+  @IsTest
+  static void testAllFiltersTogether() {
+    Test.startTest();
+
+    PropertyController.PropertyPageResult result = PropertyController.getProperties(
+      1,
+      100,
+      5000,
+      15000,
+      'Available',
+      'Furnished',
+      19.0760,
+      72.8777,
+      5
+    );
+
+    Test.stopTest();
+
+    System.assertEquals(6, result.totalRecords);
+    System.assertEquals(6, result.properties.size());
+    for (Property__c propertyRecord : result.properties) {
+      System.assert(
+        propertyRecord.Rent__c >= 5000 && propertyRecord.Rent__c <= 15000,
+        'Every result should satisfy the price range'
+      );
+      System.assertEquals('Available', propertyRecord.Status__c);
+      System.assertEquals('Furnished', propertyRecord.Furnishing_Status__c);
+    }
+  }
+
+  @IsTest
+  static void testPageBeyondAvailableRecordsReturnsEmptyList() {
+    Test.startTest();
+
+    PropertyController.PropertyPageResult result = PropertyController.getProperties(
+      3,
+      25,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    );
+
+    Test.stopTest();
+
+    System.assertEquals(30, result.totalRecords);
+    System.assertEquals(3, result.pageNumber);
+    System.assertEquals(0, result.properties.size());
   }
 }
