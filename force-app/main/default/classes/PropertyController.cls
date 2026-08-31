@@ -74,7 +74,8 @@ public with sharing class PropertyController {
       'SELECT Id, Name, Address__c, City__c, State__c, ' +
       'Country__c, Postal_Code__c, Type__c, ' +
       'Furnishing_Status__c, Status__c, Rent__c, ' +
-      'Description__c, Location__c ' +
+      'Description__c, Location__c, ' +
+      'Location__Latitude__s, Location__Longitude__s ' +
       'FROM Property__c' +
       whereClause +
       ' ORDER BY CreatedDate DESC' +
