@@ -1,0 +1,21 @@
+<template>
+  <lightning-card title="Lease Agreement PDF">
+    <div class="slds-p-around_medium">
+      <lightning-button
+        label="Generate PDF"
+        variant="brand"
+        onclick={generatePdf}
+      >
+      </lightning-button>
+
+      <lightning-button
+        label="Send PDF to Tenant"
+        variant="success"
+        class="slds-m-left_small"
+        onclick={sendPdfToTenant}
+        disabled={isSending}
+      >
+      </lightning-button>
+    </div>
+  </lightning-card>
+</template>

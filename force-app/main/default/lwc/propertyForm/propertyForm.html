@@ -1,0 +1,186 @@
+<template>
+  <lightning-card title="Create New Property" icon-name="standard:home">
+    <template if:true={isLoading}>
+      <lightning-spinner alternative-text="Creating property" size="medium">
+      </lightning-spinner>
+    </template>
+
+    <div class="slds-p-around_medium">
+      <div class="slds-grid slds-wrap slds-gutters">
+        <!-- Property Name -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <lightning-input
+            label="Property Name"
+            name="Name"
+            value={propertyData.Name}
+            onchange={handleInputChange}
+            required
+          >
+          </lightning-input>
+        </div>
+
+        <!-- Address -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <lightning-input
+            label="Address"
+            name="Address__c"
+            value={propertyData.Address__c}
+            onchange={handleInputChange}
+            required
+          >
+          </lightning-input>
+        </div>
+
+        <!-- City -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <lightning-input
+            label="City"
+            name="City__c"
+            value={propertyData.City__c}
+            onchange={handleInputChange}
+            required
+          >
+          </lightning-input>
+        </div>
+
+        <!-- State -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <lightning-input
+            label="State"
+            name="State__c"
+            value={propertyData.State__c}
+            onchange={handleInputChange}
+            required
+          >
+          </lightning-input>
+        </div>
+
+        <!-- Postal Code -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <lightning-input
+            label="Postal Code"
+            name="Postal_Code__c"
+            value={propertyData.Postal_Code__c}
+            onchange={handleInputChange}
+            required
+          >
+          </lightning-input>
+        </div>
+
+        <!-- Country -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <lightning-input
+            label="Country"
+            name="Country__c"
+            value={propertyData.Country__c}
+            onchange={handleInputChange}
+            required
+          >
+          </lightning-input>
+        </div>
+
+        <!-- Type -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <lightning-combobox
+            label="Type"
+            name="Type__c"
+            value={propertyData.Type__c}
+            options={typeOptions}
+            onchange={handleInputChange}
+            required
+          >
+          </lightning-combobox>
+        </div>
+
+        <!-- Furnishing Status -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <lightning-combobox
+            label="Furnishing Status"
+            name="Furnishing_Status__c"
+            value={propertyData.Furnishing_Status__c}
+            options={furnishingOptions}
+            onchange={handleInputChange}
+          >
+          </lightning-combobox>
+        </div>
+
+        <!-- Status -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <lightning-combobox
+            label="Status"
+            name="Status__c"
+            value={propertyData.Status__c}
+            options={statusOptions}
+            onchange={handleInputChange}
+            required
+          >
+          </lightning-combobox>
+        </div>
+
+        <!-- Rent -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <lightning-input
+            type="number"
+            label="Rent"
+            name="Rent__c"
+            value={propertyData.Rent__c}
+            onchange={handleInputChange}
+            min="0"
+            required
+          >
+          </lightning-input>
+        </div>
+
+        <!-- Description -->
+        <div class="slds-col slds-size_1-of-1">
+          <lightning-textarea
+            label="Description"
+            name="Description__c"
+            value={propertyData.Description__c}
+            onchange={handleInputChange}
+            required
+          >
+          </lightning-textarea>
+        </div>
+      </div>
+
+      <!-- Images -->
+      <div class="slds-m-top_medium">
+        <lightning-input
+          data-id="imageInput"
+          type="file"
+          label="Property Images"
+          accept="image/png,image/jpeg,image/jpg"
+          multiple
+          onchange={handleFileChange}
+          required
+        >
+        </lightning-input>
+        <template if:true={hasSelectedFiles}>
+          <div class="slds-m-top_small">
+            <p><strong>Selected Images:</strong></p>
+
+            <template for:each={selectedFiles} for:item="file">
+              <p key={file.name}>📷 {file.name}</p>
+            </template>
+          </div>
+        </template>
+
+        <p class="slds-text-body_small slds-m-top_x-small">
+          At least one image is required. Multiple images are allowed.
+        </p>
+      </div>
+
+      <!-- Create Button -->
+      <div class="slds-m-top_large slds-text-align_center">
+        <lightning-button
+          variant="brand"
+          label="Create Property"
+          onclick={handleCreateProperty}
+          disabled={isLoading}
+        >
+        </lightning-button>
+      </div>
+    </div>
+  </lightning-card>
+</template>

@@ -1,0 +1,154 @@
+<template>
+  <lightning-card title="Properties" icon-name="standard:home">
+    <!-- Loading Spinner -->
+    <template if:true={isLoading}>
+      <lightning-spinner alternative-text="Loading properties" size="medium">
+      </lightning-spinner>
+    </template>
+
+    <!-- Filters -->
+    <div class="slds-p-around_medium">
+      <div class="slds-grid slds-wrap slds-gutters">
+        <!-- Min Price -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+          <lightning-input
+            type="number"
+            name="minPrice"
+            label="Min Price"
+            value={minPrice}
+            onchange={handleFilterChange}
+          >
+          </lightning-input>
+        </div>
+
+        <!-- Max Price -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+          <lightning-input
+            type="number"
+            name="maxPrice"
+            label="Max Price"
+            value={maxPrice}
+            onchange={handleFilterChange}
+          >
+          </lightning-input>
+        </div>
+
+        <!-- Availability -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+          <lightning-combobox
+            name="availabilityStatus"
+            label="Availability Status"
+            value={availabilityStatus}
+            options={availabilityOptions}
+            onchange={handleFilterChange}
+          >
+          </lightning-combobox>
+        </div>
+
+        <!-- Furnishing -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+          <lightning-combobox
+            name="furnishingStatus"
+            label="Furnishing Status"
+            value={furnishingStatus}
+            options={furnishingOptions}
+            onchange={handleFilterChange}
+          >
+          </lightning-combobox>
+        </div>
+
+        <!-- Nearby Distance -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+          <lightning-input
+            type="number"
+            name="distance"
+            label="Nearby Distance (KM)"
+            value={distance}
+            min="1"
+            onchange={handleFilterChange}
+          >
+          </lightning-input>
+        </div>
+
+        <!-- Search Button -->
+        <div
+          class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5 slds-align_absolute-center"
+        >
+          <lightning-button
+            label="Search"
+            variant="brand"
+            onclick={handleSearch}
+          >
+          </lightning-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Property Table -->
+    <template if:true={hasProperties}>
+      <div class="slds-p-horizontal_medium">
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+          <thead>
+            <tr>
+              <th>Property Name</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Furnishing</th>
+              <th>City</th>
+              <th>Rent</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <template for:each={properties} for:item="property">
+              <tr key={property.Id}>
+                <td>{property.Name}</td>
+                <td>{property.Type__c}</td>
+                <td>{property.Status__c}</td>
+                <td>{property.Furnishing_Status__c}</td>
+                <td>{property.City__c}</td>
+                <td>
+                  <lightning-formatted-number
+                    value={property.Rent__c}
+                    format-style="currency"
+                  >
+                  </lightning-formatted-number>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </template>
+
+    <!-- No Records -->
+    <template if:false={hasProperties}>
+      <div class="slds-p-around_medium slds-text-align_center">
+        No properties found.
+      </div>
+    </template>
+
+    <!-- Pagination -->
+    <div
+      class="slds-p-around_medium slds-grid slds-grid_align-center slds-grid_vertical-align-center"
+    >
+      <lightning-button
+        label="Previous"
+        onclick={handlePrevious}
+        disabled={isPreviousDisabled}
+      >
+      </lightning-button>
+
+      <span class="slds-m-horizontal_medium">
+        Page {pageNumber} of {totalPages} ({totalRecords} Properties)
+      </span>
+
+      <lightning-button
+        label="Next"
+        onclick={handleNext}
+        disabled={isNextDisabled}
+      >
+      </lightning-button>
+    </div>
+  </lightning-card>
+</template>
